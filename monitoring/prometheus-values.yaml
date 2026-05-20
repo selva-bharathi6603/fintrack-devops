@@ -1,0 +1,18 @@
+# prometheus-values.yaml
+# Install with:
+#   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#   helm install prometheus prometheus-community/prometheus -f monitoring/prometheus-values.yaml
+
+server:
+  persistentVolume:
+    enabled: false
+
+alertmanager:
+  enabled: false
+
+extraScrapeConfigs: |
+  - job_name: 'fintrack'
+    static_configs:
+      - targets: ['fintrack.default.svc.cluster.local:80']
+    metrics_path: /metrics
+    scrape_interval: 15s

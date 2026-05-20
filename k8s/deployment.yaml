@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fintrack
+  namespace: default
+  labels:
+    app: fintrack
+    version: "IMAGE_TAG"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fintrack
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: fintrack
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: fintrack
+          image: YOUR_DOCKERHUB_USERNAME/fintrack:IMAGE_TAG
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_PATH
+              value: "/data/fintrack.db"
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: fintrack-config
+                  key: APP_ENV
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fintrack-secret
+                  key: SECRET_KEY
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "300m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: data-volume
+          emptyDir: {}
