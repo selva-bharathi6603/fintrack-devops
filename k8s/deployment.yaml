@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: fintrack
-          image: YOUR_DOCKERHUB_USERNAME/fintrack:IMAGE_TAG
+          image: selva6603/fintrack:IMAGE_TAG
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
