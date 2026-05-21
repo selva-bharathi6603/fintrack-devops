@@ -1,0 +1,10 @@
+@"
+sonar.projectKey=fintrack
+sonar.projectName=FinTrack
+sonar.sources=app
+sonar.tests=tests
+sonar.language=py
+sonar.python.version=3
+sonar.sourceEncoding=UTF-8
+sonar.exclusions=**/__pycache__/**,**/*.pyc
+"@ | Out-File -FilePath "sonar-project.properties" -Encoding utf8
