@@ -84,7 +84,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Push to DockerHub') {
             steps {
                 withCredentials([usernamePassword(
@@ -92,11 +92,10 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    bat """
-                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
-                        docker push %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%
-                        docker push %DOCKER_USER%/%IMAGE_NAME%:latest
-                        echo  Pushed %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%
+                    bat """echo %DOCKER_PASS%| docker login --username %DOCKER_USER% --password-stdin
+                    docker push %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%
+                    docker push %DOCKER_USER%/%IMAGE_NAME%:latest
+                    echo Pushed successfully
                     """
                 }
             }
@@ -149,16 +148,14 @@ pipeline {
             }
         }
     }
-
     post {
         success {
-            echo " Pipeline completed successfully — Build #${BUILD_NUMBER}"
+            echo "Pipeline completed successfully — Build #${BUILD_NUMBER}"
         }
         failure {
-            echo " Pipeline failed — Build #${BUILD_NUMBER}"
+            echo "Pipeline failed — Build #${BUILD_NUMBER}"
         }
         always {
-            bat 'docker logout || exit 0'
             cleanWs()
         }
     }
