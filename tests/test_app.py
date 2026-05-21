@@ -2,10 +2,11 @@ import pytest
 import json
 import sys
 import os
+import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../app"))
 
-os.environ["DB_PATH"] = "/tmp/fintrack_test.db"
+os.environ["DB_PATH"] = os.path.join(tempfile.gettempdir(), "fintrack_test.db")
 
 from app import app, init_db
 
