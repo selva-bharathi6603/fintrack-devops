@@ -100,7 +100,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([usernamePassword(
@@ -109,17 +108,20 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat """
-                        kubectl apply -f k8s/configmap.yaml
-                        kubectl apply -f k8s/secret.yaml
-                        kubectl apply -f k8s/service.yaml
-                        kubectl apply -f k8s/hpa.yaml
+                    set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
+                    kubectl apply -f k8s/configmap.yaml --validate=false
+                    kubectl apply -f k8s/secret.yaml --validate=false
+                    kubectl apply -f k8s/service.yaml --validate=false
+                    kubectl apply -f k8s/hpa.yaml --validate=false
                     """
                     bat """
-                        powershell -Command "(Get-Content k8s/deployment.yaml) -replace 'IMAGE_TAG', '%IMAGE_TAG%' | kubectl apply -f -"
+                    set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
+                    powershell -Command "(Get-Content k8s/deployment.yaml) -replace 'IMAGE_TAG', '%IMAGE_TAG%' | kubectl apply -f - --validate=false"
                     """
                     bat """
-                        kubectl rollout status deployment/fintrack --timeout=120s
-                        echo  Deployment successful
+                    set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
+                    kubectl rollout status deployment/fintrack --timeout=120s
+                    echo Deployment successful
                     """
                 }
             }
