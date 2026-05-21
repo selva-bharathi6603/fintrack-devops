@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USER  = credentials('dockerhub-username')
         DOCKERHUB_PASS  = credentials('dockerhub-password')
-        IMAGE_NAME      = "selva-bharathi6603/fintrack"
+        IMAGE_NAME      = "selva6603/fintrack"
         IMAGE_TAG       = "${BUILD_NUMBER}"
         SONAR_TOKEN     = credentials('sonarqube-token')
         SONAR_HOST      = 'http://localhost:9000'
