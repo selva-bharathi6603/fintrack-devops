@@ -47,7 +47,6 @@ pipeline {
                 echo 'SonarQube analysis completed — check results at http://localhost:9000/dashboard?id=fintrack'
             }
         }
-
         stage('Docker Build') {
             steps {
                 withCredentials([usernamePassword(
@@ -56,8 +55,9 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat """
-                        docker build -t %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% -t %DOCKER_USER%/%IMAGE_NAME%:latest .
-                        echo Image built: %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%
+                    docker context use default
+                    docker build -t %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG% -t %DOCKER_USER%/%IMAGE_NAME%:latest .
+                    echo Image built: %DOCKER_USER%/%IMAGE_NAME%:%IMAGE_TAG%
                     """
                 }
             }
