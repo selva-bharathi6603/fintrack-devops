@@ -44,21 +44,11 @@ pipeline {
             }
         }
 
-        // ── 4. SonarQube Analysis ────────────────────────────────────────
+        // ── 4. SonarQube Analysis ────────────────────────────────────────────────
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat """
-                        sonar-scanner ^
-                            -Dsonar.projectKey=fintrack ^
-                            -Dsonar.projectName=FinTrack ^
-                            -Dsonar.projectVersion=%BUILD_NUMBER% ^
-                            -Dsonar.sources=app ^
-                            -Dsonar.tests=tests ^
-                            -Dsonar.python.version=3 ^
-                            -Dsonar.host.url=%SONAR_HOST% ^
-                            -Dsonar.token=%SONAR_TOKEN%
-                    """
+                    bat "sonar-scanner -Dsonar.projectKey=fintrack -Dsonar.projectName=FinTrack -Dsonar.projectVersion=%BUILD_NUMBER% -Dsonar.sources=app -Dsonar.tests=tests -Dsonar.python.version=3"
                 }
             }
         }
