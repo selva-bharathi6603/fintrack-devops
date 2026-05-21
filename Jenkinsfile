@@ -17,8 +17,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/fintrack.git'
-                echo "✅ Code checked out — Build #${BUILD_NUMBER}"
+                    url: 'https://github.com/selva-bharathi6603/fintrack-devops.git'
+                echo " Code checked out — Build #${BUILD_NUMBER}"
             }
         }
 
@@ -86,7 +86,7 @@ pipeline {
                         -t ${IMAGE_NAME}:${IMAGE_TAG} \
                         -t ${IMAGE_NAME}:latest \
                         .
-                    echo "✅ Image built: ${IMAGE_NAME}:${IMAGE_TAG}"
+                    echo " Image built: ${IMAGE_NAME}:${IMAGE_TAG}"
                 '''
             }
         }
@@ -122,7 +122,7 @@ pipeline {
                     echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
                     docker push ${IMAGE_NAME}:${IMAGE_TAG}
                     docker push ${IMAGE_NAME}:latest
-                    echo "✅ Pushed ${IMAGE_NAME}:${IMAGE_TAG} to DockerHub"
+                    echo " Pushed ${IMAGE_NAME}:${IMAGE_TAG} to DockerHub"
                 '''
             }
         }
@@ -144,7 +144,7 @@ pipeline {
 
                     # Wait for rollout to complete
                     kubectl rollout status deployment/fintrack --timeout=120s
-                    echo "✅ Deployment successful"
+                    echo " Deployment successful"
                 '''
             }
         }
@@ -156,10 +156,10 @@ pipeline {
                     APP_URL=$(minikube service fintrack --url)
                     STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${APP_URL}/health)
                     if [ "$STATUS" != "200" ]; then
-                        echo "❌ Smoke test failed — HTTP ${STATUS}"
+                        echo " Smoke test failed — HTTP ${STATUS}"
                         exit 1
                     fi
-                    echo "✅ Smoke test passed — App is healthy at ${APP_URL}"
+                    echo " Smoke test passed — App is healthy at ${APP_URL}"
                 '''
             }
         }
@@ -167,10 +167,10 @@ pipeline {
 
     post {
         success {
-            echo "🎉 Pipeline completed successfully — Build #${BUILD_NUMBER}"
+            echo " Pipeline completed successfully — Build #${BUILD_NUMBER}"
         }
         failure {
-            echo "❌ Pipeline failed — Build #${BUILD_NUMBER}"
+            echo " Pipeline failed — Build #${BUILD_NUMBER}"
         }
         always {
             sh 'docker logout || true'
