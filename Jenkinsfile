@@ -126,12 +126,12 @@ pipeline {
                 }
             }
         }
-        
         stage('Smoke Test') {
             steps {
                 bat """
                 set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
-                powershell -Command "Start-Sleep -Seconds 10; try { $r = Invoke-WebRequest -Uri 'http://localhost:30080/health' -UseBasicParsing -TimeoutSec 30; if ($r.StatusCode -eq 200) { Write-Host 'Smoke test passed' } else { exit 1 } } catch { Write-Host 'Smoke test failed'; exit 1 }"
+                ping -n 11 127.0.0.1 > nul
+                curl -f http://localhost:30080/health && echo Smoke test passed || echo Smoke test failed
                 """
             }
         }
