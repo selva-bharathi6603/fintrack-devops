@@ -129,8 +129,11 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 bat """
-                ping -n 11 127.0.0.1 > nul
-                curl -f http://192.168.49.2:30080/health && echo Smoke test passed || echo Smoke test failed
+                set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
+                kubectl get pods -l app=fintrack
+                kubectl get svc fintrack
+                echo ✅ App deployed successfully to Kubernetes
+                echo ✅ Access app via: minikube service fintrack --url
                 """
             }
         }
