@@ -131,7 +131,9 @@ pipeline {
                 bat """
                 set KUBECONFIG=C:\\Users\\Selva Bharathi M\\.kube\\config
                 ping -n 11 127.0.0.1 > nul
-                curl -f http://localhost:30080/health && echo Smoke test passed || echo Smoke test failed
+                for /f "tokens=*" %%i in ('minikube service fintrack --url') do set APP_URL=%%i
+                echo App URL: %APP_URL%
+                curl -f %APP_URL%/health && echo Smoke test passed || echo Smoke test failed
                 """
             }
         }
